@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import Menu from './menu';
+import Restaurant from './restaurant';
 import Tabs from './tabs';
 
 export default function Restaurants({ restaurants }) {
@@ -15,10 +15,15 @@ export default function Restaurants({ restaurants }) {
         [activeId, restaurants]
     );
 
+    const rate = useMemo(() => {
+        const total = activeRestaurant.reviews.reduce((acc, { rating }) => acc + rating, 0);
+        return Math.round(total / activeRestaurant.reviews.length);
+    }, [activeRestaurant.reviews]);
+
     return (
         <div>
             <Tabs tabs={tabs} onChange={setActiveId} />
-            <Menu menu={activeRestaurant.menu} />
+            <Restaurant menu={activeRestaurant.menu} reviews={activeRestaurant.reviews} rate={rate} />
         </div>
     );
 }
